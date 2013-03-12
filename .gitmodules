@@ -1,3 +1,6 @@
 [submodule "gitignore"]
 	path = vendor/github/gitignore
 	url = https://github.com/github/gitignore.git
+[submodule "shFlags"]
+	path = vendor/nvie/shFlags
+	url = https://github.com/nvie/shFlags.git
