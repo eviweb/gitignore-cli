@@ -21,19 +21,11 @@
 # THE SOFTWARE.
 
 prefix=/usr/local
+srcdir=`pwd`
 
 # files that need mode 755
-EXEC_FILES=git-ignore
-
-# files that need mode 644
-SCRIPT_FILES =git-ignore-list
-SCRIPT_FILES+=git-ignore-create
-SCRIPT_FILES+=git-ignore-add
-SCRIPT_FILES+=git-ignore-remove
-SCRIPT_FILES+=git-ignore-help
-SCRIPT_FILES+=git-ignore-version
-SCRIPT_FILES+=gitignore-common
-SCRIPT_FILES+=gitignore-shFlags
+EXEC_FILE=git-ignore
+EXEC_PATH=$(srcdir)/$(EXEC_FILE)
 
 all:
 	@echo "usage: make install"
@@ -41,14 +33,14 @@ all:
 
 install:
 	@test -f gitignore-shFlags || (echo "Run 'git submodule init && git submodule update' first." ; exit 1 )
+	chmod 0755 $(EXEC_PATH)
 	install -d -m 0755 $(prefix)/bin
-	install -m 0755 $(EXEC_FILES) $(prefix)/bin
-	install -m 0644 $(SCRIPT_FILES) $(prefix)/bin
+	ln -s $(EXEC_PATH) $(prefix)/bin
 
 uninstall:
 	test -d $(prefix)/bin && \
 	cd $(prefix)/bin && \
-	rm -f $(EXEC_FILES) $(SCRIPT_FILES)
+	rm -f $(EXEC_FILE)
 	
 clean:
 	@echo "Nothing to clean"
