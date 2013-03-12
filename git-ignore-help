@@ -20,3 +20,27 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+usage() {
+	echo "usage: git ignore <subcommand>"
+	echo
+	echo "Available subcommands are:"
+	echo "   list      Lists all available ignore patterns."
+	echo "   create    Creates a git ignore file."
+	echo "   add       Adds ignore patterns to an existing ignore file."
+	echo "   remove    Removes ignore patterns from an existing ignore file."
+	echo "   help      Displays this message."
+	echo "   version   Shows version information."
+	echo
+	echo "Try 'git ignore <subcommand> help' for details."
+}
+
+cmd_default() {
+	usage
+	exit 0
+}
+
+cmd_help() {
+	usage
+	exit 0
+}
