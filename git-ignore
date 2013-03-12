@@ -20,3 +20,72 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+# set this to workaround expr problems in shFlags on freebsd
+if uname -s | egrep -iq 'bsd'; then export EXPR_COMPAT=1; fi
+
+# enable debug mode
+if [ "$DEBUG" = "yes" ]; then
+	set -x
+fi
+
+# The sed expression here replaces all backslashes by forward slashes.
+# This helps our Windows users, while not bothering our Unix users.
+export GITIGNORE_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
+export GITIGNORE_VENDOR_DIR=$GITIGNORE_DIR/vendor
+
+main() {
+	if [ $# -lt 1 ]; then
+        . "$GITIGNORE_DIR/git-ignore-help"
+		usage
+		exit 1
+	fi
+
+	# load common functionality
+	. "$GITIGNORE_DIR/gitignore-common"
+
+	# This environmental variable fixes non-POSIX getopt style argument
+	# parsing, effectively breaking git-ignore subcommand parsing on several
+	# Linux platforms.
+	export POSIXLY_CORRECT=1
+
+	# use the shFlags project to parse the command line arguments
+	. "$GITIGNORE_DIR/gitignore-shFlags"
+	FLAGS_PARENT="git ignore"
+
+    # allow user to request git action logging
+    DEFINE_boolean show_commands false 'show actions taken (git commands)' g
+
+    # do actual parsing
+	FLAGS "$@" || exit $?
+	eval set -- "${FLAGS_ARGV}"
+
+	# sanity checks
+	SUBCOMMAND="$1"; shift
+
+	if [ ! -e "$GITIGNORE_DIR/git-ignore-$SUBCOMMAND" ]; then
+		SUBCOMMAND='help'
+	fi
+
+	# run command
+	. "$GITIGNORE_DIR/git-ignore-$SUBCOMMAND"
+	FLAGS_PARENT="git ignore $SUBCOMMAND"
+
+	# test if the first argument is a flag (i.e. starts with '-')
+	# in that case, we interpret this arg as a flag for the default
+	# command
+	SUBACTION="default"
+	if [ "$1" != "" ] && { ! echo "$1" | grep -q "^-"; } then
+		SUBACTION="$1"; shift
+	fi
+	if ! type "cmd_$SUBACTION" >/dev/null 2>&1; then
+		warn "Unknown subcommand: '$SUBACTION'"
+		usage
+		exit 1
+	fi
+
+	# run the specified action
+    cmd_$SUBACTION "$@"
+}
+
+main "$@"
