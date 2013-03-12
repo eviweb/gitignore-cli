@@ -31,7 +31,9 @@ fi
 
 # The sed expression here replaces all backslashes by forward slashes.
 # This helps our Windows users, while not bothering our Unix users.
-export GITIGNORE_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
+# The use of readlink permit to install git-ignore using a symlink
+GITIGNORE_DIR=$(readlink -f "$(echo "$0" | sed -e 's,\\,/,g')")
+export GITIGNORE_DIR=$(dirname $GITIGNORE_DIR)
 export GITIGNORE_VENDOR_DIR=$GITIGNORE_DIR/vendor
 
 main() {
