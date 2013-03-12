@@ -20,3 +20,41 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+export GITIGNORE_SRC=$GITIGNORE_DIR/vendor/github/gitignore
+
+# shell output
+warn() { echo "$@" >&2; }
+die() { warn "$@"; exit 1; }
+
+escape() {
+	echo "$1" | sed 's/\([\.\$\*]\)/\\\1/g'
+}
+
+# set logic
+has() {
+	local item=$1; shift
+	echo " $@ " | grep -q " $(escape $item) "
+}
+
+# basic string matching
+startswith() { [ "$1" != "${1#$2}" ]; }
+endswith() { [ "$1" != "${1%$2}" ]; }
+
+# convenience functions for checking shFlags flags
+flag() { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG -eq $FLAGS_TRUE ]; }
+noflag() { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG -ne $FLAGS_TRUE ]; }
+
+# print array elements using column format
+printcolumn() {
+    declare -a values=($@)
+    for value in "${values[@]}"; do 
+        printf "%-8s\n" "${value}"
+    done | column
+}
+
+# list *.gitignore files
+listgitignores() {
+    local pattern="\.gitignore"
+    ls $1 | grep $pattern | sed "s/$pattern//g"
+}

@@ -20,3 +20,41 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+usage() {
+	echo "usage: git ignore list  [-1]"
+}
+
+parse_args() {
+	# parse options
+	FLAGS "$@" || exit $?
+	eval set -- "${FLAGS_ARGV}"
+}
+
+cmd_default() {
+    cmd_list "$@"
+}
+
+cmd_list() {
+        DEFINE_boolean oneperline false 'display one ignore pattern per line' 1
+	parse_args "$@"
+
+        if flag oneperline; then
+            listgitignores "$GITIGNORE_SRC"
+            echo ""
+            echo "-- GLOBAL --"
+            echo ""
+            listgitignores "$GITIGNORE_SRC/Global"
+        else
+            printcolumn $(listgitignores "$GITIGNORE_SRC")
+            echo ""
+            echo "-- GLOBAL --"
+            echo ""
+            printcolumn $(listgitignores "$GITIGNORE_SRC/Global")
+        fi
+}
+
+cmd_help() {
+	usage
+	exit 0
+}
