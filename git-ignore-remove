@@ -20,3 +20,51 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+usage() {
+    echo "usage: git ignore remove [-g] [<file>]"
+    echo ""
+    echo "Note that if <file> is global, it implies -g." 
+}
+
+parse_args() {
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
+
+    # save patterns in a global variable
+    FILE=$1
+}
+
+cmd_default() {
+    cmd_remove "$@"
+}
+
+cmd_remove() {
+    DEFINE_boolean global false 'unset the core.excludesfile global variable' g
+    parse_args "$@"
+
+    local file=""
+
+    if [[ -n "$FILE" ]]; then
+        file=$(readlink -f $FILE)
+        while true; do
+            read -p "Do you really want to remove $file (y|n) ? " yn
+            case $yn in
+                [Yy]* ) rm $file
+                        break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi
+
+    if flag global || [[ $file == $(getglobal) ]]; then
+        unsetglobal
+    fi
+}
+
+cmd_help() {
+    usage
+    exit 0
+}
