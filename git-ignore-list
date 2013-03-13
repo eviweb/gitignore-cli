@@ -22,13 +22,13 @@
 # THE SOFTWARE.
 
 usage() {
-	echo "usage: git ignore list  [-1]"
+    echo "usage: git ignore list  [-1]"
 }
 
 parse_args() {
-	# parse options
-	FLAGS "$@" || exit $?
-	eval set -- "${FLAGS_ARGV}"
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
 }
 
 cmd_default() {
@@ -36,25 +36,25 @@ cmd_default() {
 }
 
 cmd_list() {
-        DEFINE_boolean oneperline false 'display one ignore pattern per line' 1
-	parse_args "$@"
+    DEFINE_boolean oneperline false 'display one ignore pattern per line' 1
+    parse_args "$@"
 
-        if flag oneperline; then
-            listgitignores "$GITIGNORE_SRC"
-            echo ""
-            echo "-- GLOBAL --"
-            echo ""
-            listgitignores "$GITIGNORE_SRC/Global"
-        else
-            printcolumn $(listgitignores "$GITIGNORE_SRC")
-            echo ""
-            echo "-- GLOBAL --"
-            echo ""
-            printcolumn $(listgitignores "$GITIGNORE_SRC/Global")
-        fi
+    if flag oneperline; then
+        listgitignores "$GITIGNORE_SRC"
+        echo ""
+        echo "-- GLOBAL --"
+        echo ""
+        listgitignores "$GITIGNORE_SRC/Global"
+    else
+        printcolumn $(listgitignores "$GITIGNORE_SRC")
+        echo ""
+        echo "-- GLOBAL --"
+        echo ""
+        printcolumn $(listgitignores "$GITIGNORE_SRC/Global")
+    fi
 }
 
 cmd_help() {
-	usage
-	exit 0
+    usage
+    exit 0
 }
