@@ -28,13 +28,13 @@ warn() { echo "$@" >&2; }
 die() { warn "$@"; exit 1; }
 
 escape() {
-	echo "$1" | sed 's/\([\.\$\*]\)/\\\1/g'
+    echo "$1" | sed 's/\([\.\$\*]\)/\\\1/g'
 }
 
 # set logic
 has() {
-	local item=$1; shift
-	echo " $@ " | grep -q " $(escape $item) "
+    local item=$1; shift
+    echo " $@ " | grep -q " $(escape $item) "
 }
 
 # basic string matching
@@ -57,4 +57,31 @@ printcolumn() {
 listgitignores() {
     local pattern="\.gitignore"
     ls $1 | grep $pattern | sed "s/$pattern//g"
+}
+
+# split pattern list
+splitpatterns() {
+    local patterns=$1
+    echo ${patterns//,/ }
+}
+
+# merge pattern file
+mergepatterns() {
+    declare -a patterns=( $(splitpatterns "$1") )
+    local merged=""
+    for pattern in "${patterns[@]}"; do 
+        local file="$GITIGNORE_SRC/$pattern.gitignore"
+        if [[ ! -e $file ]]; then
+            file="$GITIGNORE_SRC/Global/$pattern.gitignore"
+        fi
+        if [[ -e $file ]]; then
+            merged="$merged\n$(cat $file)"
+        fi
+    done
+    echo -e $merged
+}
+
+# normalize file content
+normalizecontent() {
+    echo -e "$@" | sed "s/ /\n/g"
 }

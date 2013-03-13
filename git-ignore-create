@@ -1,18 +1,18 @@
 #! /bin/bash
 # The MIT License
-# 
+#
 # Copyright 2013 Eric VILLARD <dev@eviweb.fr>.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,3 +20,51 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+usage() {
+    echo "usage: git ignore create [-f] [-d <directory>] [<pattern1>,<pattern2>,...]"
+}
+
+parse_args() {
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
+
+    # save patterns in a global variable
+    PATTERNS=$1
+}
+
+cmd_default() {
+    cmd_create "$@"
+}
+
+cmd_create() {
+    DEFINE_boolean force false 'replace existing file without prompt' f
+    DEFINE_string directory '.' '.gitignore target directory' d
+    parse_args "$@"
+
+    if [[ ! -e $FLAGS_directory ]]; then
+        mkdir -p $FLAGS_directory
+    fi
+
+    local file=$FLAGS_directory/.gitignore
+
+    if [[ -e "$file" ]] && noflag force; then
+        while true; do
+            read -p "$FLAGS_directory/.gitignore already exists, overwrite (y|n) ? " yn
+            case $yn in
+                [Yy]* ) break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi
+
+    local content=$(mergepatterns $PATTERNS)
+    normalizecontent $content > $file
+}
+
+cmd_help() {
+    usage
+    exit 0
+}
