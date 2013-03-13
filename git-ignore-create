@@ -22,7 +22,7 @@
 # THE SOFTWARE.
 
 usage() {
-    echo "usage: git ignore create [-f] [-d <directory>] [<pattern1>,<pattern2>,...]"
+    echo "usage: git ignore create [-f] [-g] [-d <directory>] [<pattern1>,<pattern2>,...]"
 }
 
 parse_args() {
@@ -40,6 +40,7 @@ cmd_default() {
 
 cmd_create() {
     DEFINE_boolean force false 'replace existing file without prompt' f
+    DEFINE_boolean global false 'add the file to the core.excludesfile global configuration' g
     DEFINE_string directory '.' '.gitignore target directory' d
     parse_args "$@"
 
@@ -62,6 +63,10 @@ cmd_create() {
 
     local content=$(mergepatterns $PATTERNS)
     normalizecontent $content > $file
+    
+    if flag global; then
+        setglobal $file
+    fi
 }
 
 cmd_help() {

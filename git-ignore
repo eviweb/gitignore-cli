@@ -55,9 +55,6 @@ main() {
     . "$GITIGNORE_DIR/gitignore-shFlags"
     FLAGS_PARENT="git ignore"
 
-    # allow user to request git action logging
-    DEFINE_boolean show_commands false 'show actions taken (git commands)' g
-
     # do actual parsing
     FLAGS "$@" || exit $?
     eval set -- "${FLAGS_ARGV}"
@@ -77,9 +74,13 @@ main() {
     # in that case, we interpret this arg as a flag for the default
     # command
     SUBACTION="default"
-    if [ "$1" != "" ] && { ! echo "$1" | grep -q "^-"; } && { ! echo "$1" | grep -q ","; } then
+    if [ "$1" != "" ] && 
+       { ! echo "$1" | grep -q "^-"; } && 
+       { ! echo "$1" | grep -q ","; } && 
+       issubaction "$1" ; then
     	SUBACTION="$1"; shift
     fi
+
     if ! type "cmd_$SUBACTION" >/dev/null 2>&1; then
     	warn "Unknown subcommand: '$SUBACTION'"
     	usage

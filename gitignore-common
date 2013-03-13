@@ -85,3 +85,33 @@ mergepatterns() {
 normalizecontent() {
     echo -e "$@" | sed "s/ /\n/g"
 }
+
+# define gitignore file as global
+setglobal() {
+    git config --global core.excludesfile $(readlink -f "$1")
+}
+
+# remove gitignore from global
+unsetglobal() {
+    git config --global --unset core.excludesfile
+}
+
+# retrieve the global gitignore file
+getglobal() {
+    git config --global --get core.excludesfile
+}
+
+# retrieve subactions
+getsubactions() {
+    normalizecontent $(declare -F | grep cmd_ | sed "s/^[^_]*cmd_//g")
+#| sed "s/\n/ /g"    
+}
+
+# check if a string is a subaction
+issubaction() {
+    local action=$(getsubactions | grep "$1")
+    if [[ "$action" == "$1" ]]; then
+        return 0
+    fi
+    return 1
+}
