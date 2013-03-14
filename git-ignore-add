@@ -20,3 +20,51 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+usage() {
+    echo "usage: git ignore add <file> <pattern1>[,<pattern2>,...]"
+}
+
+parse_args() {
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
+
+    # save file and patterns in a global variable
+    FILE=$1
+    PATTERNS=$2
+}
+
+cmd_default() {
+    cmd_add "$@"
+}
+
+cmd_add() {
+    parse_args "$@"
+
+    if [[ ! -f $FILE ]]; then
+        echo "File not found : $FILE"
+        exit 1
+    fi
+
+    declare -a patterns=( $(splitpatterns "$PATTERNS") )
+    for pattern in "${patterns[@]}"; do 
+ #       if ! ispatterninfile $pattern $FILE; then
+ #           getpatternsfromfile "$pattern" >> $FILE
+ #       fi
+echo "-----------------"
+echo "$pattern -> $FILE"
+if ispatterninfile $pattern $FILE; then
+    echo "IN"
+else 
+    echo "NO"
+fi
+echo "-------------------"
+    done
+    #normalizecontent $content >> $FILE
+}
+
+cmd_help() {
+    usage
+    exit 0
+}

@@ -65,20 +65,37 @@ splitpatterns() {
     echo ${patterns//,/ }
 }
 
+# get gitignore patterns from files
+getpatternsfromfile() {
+    local file="$GITIGNORE_SRC/$pattern.gitignore"    
+    if [[ ! -e $file ]]; then
+        file="$GITIGNORE_SRC/Global/$pattern.gitignore"
+    fi
+    if [[ -e $file ]]; then
+        cat "$file"
+    else
+        echo ""
+    fi
+}
+
 # merge pattern file
 mergepatterns() {
     declare -a patterns=( $(splitpatterns "$1") )
     local merged=""
-    for pattern in "${patterns[@]}"; do 
-        local file="$GITIGNORE_SRC/$pattern.gitignore"
-        if [[ ! -e $file ]]; then
-            file="$GITIGNORE_SRC/Global/$pattern.gitignore"
+    for pattern in "${patterns[@]}"; do
+        if [ "$merge" != "" ]; then
+            merged="$merged\n"
         fi
-        if [[ -e $file ]]; then
-            merged="$merged\n$(cat $file)"
-        fi
+        merged="$merged$(getpatternsfromfile $pattern)"
     done
-    echo -e $merged
+    echo -e "$merged"
+}
+
+# checks whether a pattern is in a file
+ispatterninfile() {
+   local pattern="$(getpatternsfromfile $1)"
+echo "$pattern"
+   cat "$2" | grep  "$pattern"
 }
 
 # normalize file content
@@ -103,8 +120,7 @@ getglobal() {
 
 # retrieve subactions
 getsubactions() {
-    normalizecontent $(declare -F | grep cmd_ | sed "s/^[^_]*cmd_//g")
-#| sed "s/\n/ /g"    
+    normalizecontent $(declare -F | grep cmd_ | sed "s/^[^_]*cmd_//g")   
 }
 
 # check if a string is a subaction

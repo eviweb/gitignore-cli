@@ -61,8 +61,8 @@ cmd_create() {
         done
     fi
 
-    local content=$(mergepatterns $PATTERNS)
-    normalizecontent $content > $file
+    local content="$(mergepatterns $PATTERNS)"
+    echo "$content" > $file
     
     if flag global; then
         setglobal $file
