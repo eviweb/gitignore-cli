@@ -72,7 +72,7 @@ getpatternsfromfile() {
         file="$GITIGNORE_SRC/Global/$pattern.gitignore"
     fi
     if [[ -e $file ]]; then
-        cat "$file"
+        echo -e "##### begin $pattern #####\n$(cat $file)\n##### end $pattern #####"
     else
         echo ""
     fi
@@ -93,9 +93,7 @@ mergepatterns() {
 
 # checks whether a pattern is in a file
 ispatterninfile() {
-   local pattern="$(getpatternsfromfile $1)"
-echo "$pattern"
-   cat "$2" | grep  "$pattern"
+    cat "$2" | grep  "begin $1" 1> /dev/null
 }
 
 # normalize file content

@@ -48,20 +48,11 @@ cmd_add() {
     fi
 
     declare -a patterns=( $(splitpatterns "$PATTERNS") )
-    for pattern in "${patterns[@]}"; do 
- #       if ! ispatterninfile $pattern $FILE; then
- #           getpatternsfromfile "$pattern" >> $FILE
- #       fi
-echo "-----------------"
-echo "$pattern -> $FILE"
-if ispatterninfile $pattern $FILE; then
-    echo "IN"
-else 
-    echo "NO"
-fi
-echo "-------------------"
+    for pattern in "${patterns[@]}"; do
+       if ! ispatterninfile $pattern $FILE; then
+           getpatternsfromfile "$pattern" >> $FILE
+       fi
     done
-    #normalizecontent $content >> $FILE
 }
 
 cmd_help() {
