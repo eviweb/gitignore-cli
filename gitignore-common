@@ -78,6 +78,17 @@ getpatternsfromfile() {
     fi
 }
 
+# remove gitignore patterns from files
+removepatternsfromfile() {
+    local file="$GITIGNORE_SRC/$pattern.gitignore"
+    if [[ ! -e $file ]]; then
+        file="$GITIGNORE_SRC/Global/$pattern.gitignore"
+    fi
+    if [[ -e $file ]]; then
+        sed -i "/##### begin $pattern #####/,/##### end $pattern #####/d" $2
+    fi
+}
+
 # merge pattern file
 mergepatterns() {
     declare -a patterns=( $(splitpatterns "$1") )
