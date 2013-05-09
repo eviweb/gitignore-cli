@@ -23,6 +23,10 @@
 
 usage() {
     echo "usage: git ignore list  [-1]"
+    echo ""
+    echo "Available options :"
+    echo "  -1          list available patterns one per line"
+    echo ""
 }
 
 parse_args() {

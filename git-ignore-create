@@ -23,6 +23,17 @@
 
 usage() {
     echo "usage: git ignore create [-f] [-g] [-d <directory>] [<pattern1>,<pattern2>,...]"
+    echo ""
+    echo "Available options :"
+    echo "  -f                          force the replacement of an existing .gitignore file"
+    echo "  -g                          make ignore file global"
+    echo "  -d <directory>              target directory to create the file in"
+    echo ""
+    echo "Parameters :"
+    echo "  <pattern1>,<pattern2>,...   comma separated list of patterns to include"
+    echo ""
+    echo "Patterns are the ones listed by the list subcommand and are case sensitive"
+    echo ""
 }
 
 parse_args() {

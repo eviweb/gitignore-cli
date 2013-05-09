@@ -23,6 +23,13 @@
 
 usage() {
     echo "usage: git ignore delete <file> <pattern1>[,<pattern2>,...]"
+    echo ""
+    echo "Mandatory Parameters :"
+    echo "  <file>                      .gitignore file"
+    echo "  <pattern1>[,<pattern2>,...] comma separated list of patterns to delete"
+    echo ""
+    echo "Patterns are the ones listed by the list subcommand and are case sensitive"
+    echo ""
 }
 
 parse_args() {

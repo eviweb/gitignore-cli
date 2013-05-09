@@ -23,6 +23,12 @@
 
 usage() {
     echo "usage: git ignore see <pattern1>[,<pattern2>,...]"
+    echo ""
+    echo "Mandatory Parameters :"
+    echo "  <pattern1>[,<pattern2>,...] comma separated list of patterns to add"
+    echo ""
+    echo "Patterns are the ones listed by the list subcommand and are case sensitive"
+    echo ""
 }
 
 parse_args() {
