@@ -23,6 +23,8 @@
 
 export GITIGNORE_SRC=$GITIGNORE_DIR/vendor/github/gitignore
 
+declare -a GITIGNORE_DIRS=( )
+
 # shell output
 warn() { echo "$@" >&2; }
 die() { warn "$@"; exit 1; }
@@ -67,23 +69,15 @@ splitpatterns() {
 
 # get gitignore patterns from files
 getpatternsfromfile() {
-    local file="$GITIGNORE_SRC/$pattern.gitignore"    
-    if [[ ! -e $file ]]; then
-        file="$GITIGNORE_SRC/Global/$pattern.gitignore"
-    fi
+    local file=$(searchpattern "$pattern")
     if [[ -e $file ]]; then
         echo -e "##### begin $pattern #####\n$(cat $file)\n##### end $pattern #####"
-    else
-        echo ""
     fi
 }
 
 # remove gitignore patterns from files
 removepatternsfromfile() {
-    local file="$GITIGNORE_SRC/$pattern.gitignore"
-    if [[ ! -e $file ]]; then
-        file="$GITIGNORE_SRC/Global/$pattern.gitignore"
-    fi
+    local file=$(searchpattern "$pattern")
     if [[ -e $file ]]; then
         sed -i "/##### begin $pattern #####/,/##### end $pattern #####/d" $2
     fi
@@ -93,13 +87,11 @@ removepatternsfromfile() {
 mergepatterns() {
     declare -a patterns=( $(splitpatterns "$1") )
     local merged=""
-    for pattern in "${patterns[@]}"; do
-        if [ "$merge" != "" ]; then
-            merged="$merged\n"
-        fi
-        merged="$merged$(getpatternsfromfile $pattern)"
+    for pattern in "${patterns[@]}"
+    do
+        merged=${merged}"\n"$(getpatternsfromfile "$pattern")
     done
-    echo -e "$merged"
+    echo -e "$merged" | sed '/^$/d'
 }
 
 # checks whether a pattern is in a file
@@ -139,4 +131,40 @@ issubaction() {
         return 0
     fi
     return 1
+}
+
+# update list of registered paths
+updaterepopathlist() {
+    local file=$GITIGNORE_CONFIG_DIR/repositories
+    local list="$GITIGNORE_SRC $GITIGNORE_SRC/Global"
+    if [[ -e $file ]]
+    then
+        list=$list' '$(cat $file | awk '/^[^#]/{print $NF}' | tr '\n' ' ')
+    fi
+    eval "GITIGNORE_DIRS=( $list )"
+}
+
+# search pattern in a file
+searchpattern() {
+    updaterepopathlist
+    local i=0
+    local l=${#GITIGNORE_DIRS[@]}
+    while [ $i -lt $l ] && [[ ! -e ${GITIGNORE_DIRS[i]}/$pattern.gitignore ]]
+    do
+        (( i++ ))
+    done
+    if [[ -e ${GITIGNORE_DIRS[i]}/$pattern.gitignore ]]
+    then
+        echo ${GITIGNORE_DIRS[i]}/$pattern.gitignore
+    fi
+}
+
+# get git repositories
+getgitrepos() {
+    local file=$GITIGNORE_CONFIG_DIR/repositories
+    local list=""
+    if [[ -e $file ]]
+    then
+        echo $(cat $file | grep ' git ' | awk '/^[^#]/{print $NF}' | tr '\n' ' ')
+    fi
 }

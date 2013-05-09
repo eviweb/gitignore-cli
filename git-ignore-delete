@@ -56,9 +56,7 @@ cmd_delete() {
 
     declare -a patterns=( $(splitpatterns "$PATTERNS") )
     for pattern in "${patterns[@]}"; do
-#        if ispatterninfile $pattern $FILE; then
-            removepatternsfromfile $pattern $FILE
-#        fi
+        removepatternsfromfile $pattern $FILE
     done
 }
 

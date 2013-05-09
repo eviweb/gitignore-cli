@@ -35,6 +35,21 @@ cmd_update() {
     git fetch --all --recurse-submodules=yes
     git submodule foreach git rebase -p origin/master
     git rebase -p origin/master
+    #
+    local repos=( $(getgitrepos) )
+    for repo in ${repos[@]}
+    do
+        cd $repo
+        local remotebranch=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2> /dev/null)
+        local split=( ${remotebranch//\// } )
+        local remote=${split[0]}
+
+        if [ $remotebranch != "@{u}" ]
+        then
+            git fetch $remote
+            git rebase -p $remotebranch
+        fi        
+    done
     cd $BACKUP_DIR
 }
 

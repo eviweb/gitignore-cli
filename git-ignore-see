@@ -49,7 +49,7 @@ cmd_see() {
 
     declare -a patterns=( $(splitpatterns "$PATTERNS") )
     for pattern in "${patterns[@]}"; do
-       getpatternsfromfile "$pattern"
+        getpatternsfromfile "$pattern"
     done
 }
 

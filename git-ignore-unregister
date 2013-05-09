@@ -22,30 +22,38 @@
 # THE SOFTWARE.
 
 usage() {
-	echo "usage: git ignore <subcommand>"
-	echo
-	echo "Available subcommands are:"
-	echo "  list        Lists all available ignore patterns."
-        echo "  see         Displays the content of one or more patterns."
-	echo "  create      Creates a git ignore file."
-        echo "  remove      Removes a git ignore file."
-	echo "  add         Adds ignore patterns to an existing ignore file."
-	echo "  delete      Deletes ignore patterns from an existing ignore file."
-        echo "  update      Update this tool and its submodules to their last up to date version."
-        echo "  register    Register local gitignore pattern repository"
-        echo "  unregister  Register local gitignore pattern repository"
-	echo "  help        Displays this message."
-	echo "  version     Shows version information."
-	echo
-	echo "Try 'git ignore <subcommand> help' for details."
+    echo "usage: git ignore unregister <name>"
+    echo ""
+    echo "Mandatory Parameters :"
+    echo "  <name>  name identifier of the repository to unregister, spaces are not allowed"
+    echo ""
+}
+
+parse_args() {
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
+
+    # save file and patterns in a global variable
+    NAME=$1
 }
 
 cmd_default() {
-	usage
-	exit 0
+    cmd_unregister "$@"
+}
+
+cmd_unregister() {
+    parse_args "$@"
+
+    # check provided values
+    [[ -n $NAME ]] || (echo "!!! Name could not be empty !!!" && echo "" && usage && exit 1)
+
+    # check config file and remove the repository if registered
+    FILE=$GITIGNORE_CONFIG_DIR/repositories
+    test -e $FILE && sed -i "s#${NAME}\s.*##" $FILE && sed -i "/^$/d" $FILE
 }
 
 cmd_help() {
-	usage
-	exit 0
+    usage
+    exit 0
 }

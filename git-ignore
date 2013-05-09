@@ -35,6 +35,7 @@ fi
 GITIGNORE_DIR=$(readlink -f "$(echo "$0" | sed -e 's,\\,/,g')")
 export GITIGNORE_DIR=$(dirname $GITIGNORE_DIR)
 export GITIGNORE_VENDOR_DIR=$GITIGNORE_DIR/vendor
+export GITIGNORE_CONFIG_DIR=$GITIGNORE_DIR/config
 
 main() {
     if [ $# -lt 1 ]; then
@@ -50,6 +51,9 @@ main() {
     # parsing, effectively breaking git-ignore subcommand parsing on several
     # Linux platforms.
     export POSIXLY_CORRECT=1
+
+    # create the config directory
+    test -e $GITIGNORE_CONFIG_DIR || mkdir $GITIGNORE_CONFIG_DIR
 
     # use the shFlags project to parse the command line arguments
     . "$GITIGNORE_DIR/gitignore-shFlags"
