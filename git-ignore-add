@@ -54,6 +54,9 @@ cmd_add() {
         exit 1
     fi
 
+    # add a line feed to the end of file if needed
+    sed -i -e '$a\' $FILE
+
     declare -a patterns=( $(splitpatterns "$PATTERNS") )
     for pattern in "${patterns[@]}"; do
        if ! ispatterninfile $pattern $FILE; then
