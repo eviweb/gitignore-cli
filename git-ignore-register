@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Register a local gitignore pattern repository."
+    echo ""
     echo "usage: git ignore register <type> <name> <path>"
     echo ""
     echo "Mandatory Parameters :"

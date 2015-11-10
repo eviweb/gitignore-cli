@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Removes a git ignore file."
+    echo ""
     echo "usage: git ignore remove [-g] [<file>]"
     echo ""
     echo "Available options :"

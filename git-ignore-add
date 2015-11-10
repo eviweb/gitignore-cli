@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Add ignore patterns to an existing ignore file."
+    echo ""
     echo "usage: git ignore add <file> <pattern1>[,<pattern2>,...]"
     echo ""
     echo "Mandatory Parameters :"

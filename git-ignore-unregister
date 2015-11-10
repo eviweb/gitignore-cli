@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Unregister a local gitignore pattern repository."
+    echo ""
     echo "usage: git ignore unregister <name>"
     echo ""
     echo "Mandatory Parameters :"

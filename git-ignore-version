@@ -24,7 +24,11 @@
 GITIGNORE_VERSION=`cat $GITIGNORE_DIR/VERSION`
 
 usage() {
+    echo ""
+    echo "Display version information."
+    echo ""
     echo "usage: git ignore version"
+    echo ""
 }
 
 cmd_default() {

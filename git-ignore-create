@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Create a git ignore file."
+    echo ""
     echo "usage: git ignore create [-f] [-g] [-d <directory>] [<pattern1>,<pattern2>,...]"
     echo ""
     echo "Available options :"

@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "List all available ignore patterns."
+    echo ""
     echo "usage: git ignore list  [-1]"
     echo ""
     echo "Available options :"

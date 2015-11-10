@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Refresh some already set ignore patterns in an existing ignore file."
+    echo ""
     echo "usage: git ignore refresh <file> <pattern1>[,<pattern2>,...]"
     echo ""
     echo "Mandatory Parameters :"

@@ -22,7 +22,11 @@
 # THE SOFTWARE.
 
 usage() {
+    echo ""
+    echo "Update this tool and its submodules to their last up to date version."
+    echo ""
     echo "usage: git ignore update"
+    echo ""
 }
 
 cmd_default() {
