@@ -83,6 +83,16 @@ removepatternsfromfile() {
     fi
 }
 
+# refresh gitignore patterns in files
+refreshpatternsinfile() {
+    local replacement="$(getpatternsfromfile $pattern | tr '\n' '\r')"
+    if [[ -n "$replacement" ]]; then
+        local subject="##### begin $pattern #####.*##### end $pattern #####\r"
+        local content="$(cat $2)"
+        echo "$content" | tr '\n' '\r' | sed "s|$subject|$replacement|g" | tr '\r' '\n' > $2       
+    fi
+}
+
 # merge pattern file
 mergepatterns() {
     declare -a patterns=( $(splitpatterns "$1") )
