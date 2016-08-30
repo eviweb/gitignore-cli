@@ -23,35 +23,42 @@
 
 usage() {
     echo ""
-    echo "Git ignore help"
+    echo "Open an existing git ignore file with the default editor."
     echo ""
-	echo "usage: git ignore <subcommand>"
-	echo
-	echo "Available subcommands are:"
-	echo "  list        List all available ignore patterns."
-    echo "  see         Display the content of one or more patterns."
-	echo "  create      Create a git ignore file."
-    echo "  remove      Remove a git ignore file."
-	echo "  add         Add ignore patterns to an existing ignore file."
-	echo "  delete      Delete ignore patterns from an existing ignore file."
-    echo "  refresh     Refresh some already set ignore patterns in an existing ignore file."
-    echo "  update      Update this tool and its submodules to their last up to date version."
-    echo "  register    Register a local gitignore pattern repository."
-    echo "  unregister  Unregister a local gitignore pattern repository."
-    echo "  edit        Open an existing git ignore file with the default editor."
-    echo "  view        Display the content of an existing git ignore file."
-	echo "  help        Display this message."
-	echo "  version     Display version information."
-	echo
-	echo "Try 'git ignore <subcommand> help' for details."
+    echo "usage: git ignore edit <file>"
+    echo ""
+    echo "Mandatory Parameters :"
+    echo "  <file>                      .gitignore file"
+    echo ""
+    echo "If no default editor is set, then vi is the fallback one."
+    echo ""
+}
+
+parse_args() {
+    # parse options
+    FLAGS "$@" || exit $?
+    eval set -- "${FLAGS_ARGV}"
+
+    # save file in a global variable
+    FILE=$1
 }
 
 cmd_default() {
-	usage
-	exit 0
+    cmd_edit "$@"
+}
+
+cmd_edit() {
+    parse_args "$@"
+
+    if [[ ! -f $FILE ]]; then
+        echo "File not found : $FILE"
+        exit 1
+    fi
+
+    ${EDITOR:-vi} $FILE
 }
 
 cmd_help() {
-	usage
-	exit 0
+    usage
+    exit 0
 }
