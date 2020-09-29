@@ -146,7 +146,7 @@ issubaction() {
 # update list of registered paths
 updaterepopathlist() {
     local file=$GITIGNORE_CONFIG_DIR/repositories
-    local list="$GITIGNORE_SRC $GITIGNORE_SRC/Global"
+    local list="$(find $GITIGNORE_SRC -type d -name "[!.]*")"
     if [[ -e $file ]]
     then
         list=$list' '$(cat $file | awk '/^[^#]/{print $NF}' | tr '\n' ' ')
