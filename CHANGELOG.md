@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### Changed
 - use find command in updaterepopathlist function
+- update github/gitignore submodule
 
 ### 1.0.0 - 2015-11-10
 #### Added
