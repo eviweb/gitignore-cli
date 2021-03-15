@@ -37,8 +37,8 @@ cmd_update() {
     BACKUP_DIR=`pwd`
     cd $GITIGNORE_DIR
     git fetch --all --recurse-submodules=yes
-    git submodule foreach git rebase -p origin/master
-    git rebase -p origin/master
+    git submodule foreach git rebase -r origin/master
+    git rebase -r origin/master
     #
     local repos=( $(getgitrepos) )
     for repo in ${repos[@]}
@@ -51,7 +51,7 @@ cmd_update() {
         if [ $remotebranch != "@{u}" ]
         then
             git fetch $remote
-            git rebase -p $remotebranch
+            git rebase -r $remotebranch
         fi        
     done
     cd $BACKUP_DIR
