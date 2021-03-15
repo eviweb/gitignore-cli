@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 #### Changed
 - use find command in updaterepopathlist function
 - update github/gitignore submodule
+- use git rebase with --rebase-merges instead of deprecated --preserve-merges
 
 ### 1.0.0 - 2015-11-10
 #### Added
