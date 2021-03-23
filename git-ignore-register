@@ -92,10 +92,14 @@ cmd_register() {
     test -e $FILE || echo "# GIT Ignore CLI - registered repositories" > $FILE
 
     # register the repository, if a name is already registered, related settings are updated
-    PATH_PART=$(grep $REPO_PATH $FILE | awk '{print $3}')
-    NAME_PART=$(grep $NAME $FILE | awk '{print $1}')
-    [ "$REPO_PATH" == "$PATH_PART" ] ||
-        ([ "$NAME" == "$NAME_PART" ] && sed -i "s#${NAME}\s.*#${NAME} ${TYPE} ${REPO_PATH}#" $FILE || echo "$NAME $TYPE $REPO_PATH" >> $FILE)
+    PATH_PART=$(grep -Pe "$REPO_PATH\$" $FILE | awk '{print $3}')
+    NAME_PART=$(grep -Pe "^$NAME" $FILE | awk '{print $1}')
+
+    if [ "$REPO_PATH" == "$PATH_PART" ] || [ "$NAME" == "$NAME_PART" ]; then
+        sed -i "s#${NAME}\s.*#${NAME} ${TYPE} ${REPO_PATH}#" $FILE 
+    else 
+        echo "$NAME $TYPE $REPO_PATH" >> $FILE
+    fi
 }
 
 cmd_help() {
