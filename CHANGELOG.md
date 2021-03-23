@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### [Unreleased][unreleased]
 
+### 1.0.1 - 2021-03-23
+
 #### Changed
 
 - use find command in updaterepopathlist function
